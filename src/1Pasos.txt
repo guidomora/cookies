@@ -1,0 +1,86 @@
+1) Creacion del proyecto:
+- instalamos material ui
+- creamos los temas 
+- themes > dentro van a estar los temas creados
+- vamos al _app.tsx envolvemos todo en el ThemeProvider de material, le 
+  le agregamos la propiedad theme y le pasamos el theme que querramos usar
+- para que se vea tenemos que importar el CssBaseline 
+
+2) Layout y pagionas adicionales
+- components > Layout.tsx vamos a tener el diseno de la pag 
+- ui > NavBar.tsx Creamos el navbar 
+- importamos el NavBar al Layout
+- en la carpeta pages creamos los siguientes archivos:
+    contact
+    about
+    theme-changer
+
+3) Pagina para cambiar el tema 
+- en theme-changer.tsx creamos como un form conun useState que mas
+  mas adelante le vamos a dar funcionabilidad para cambiar el tema
+
+4) LocalStorage vs Cookies:
+
+Son utilizadas para cuando queremos diseñar algo a la medida de la request del cliente
+por ej si buscamos teclados, eso se guarda en las cookies y al darle acceso a las cookies
+a una pagina, van a poder ver que estuvimos buscando teclados y en este caso ofrecernos
+teclados
+
+    Las cookies tienen una fraccion(4k) de lo que tiene el local LocalStorage(5mb).
+    Son enviadas al backend en request time, osea apenas la tenemos inmediatamente se 
+    manda al backend
+    en LocalStorage nosotros tenemos que decirle manualmente que info del es la que queremos
+    mandarle al backend
+
+- instalamos npm i js-cookie y para ts npm i --save-dev @types/js-cookie
+- hace que podamos interactuar con las cookies 
+
+5) Leer las cookies:
+- importamos Cookies de la libreria descargada
+- a la funcion onThemeChange le agregamos Cookies.set para setear las cookies 
+- creamos getServerSideProps, desestructuramos las cookies que vienen del context
+  y la request
+- las pasamos como props al return y luego al componente 
+
+6) Leer cookies desde el Restful API:
+- instalamos axios
+- creamos una funcion que con axios hace un llamado al Restful api que ya viene con next
+  "api/hello"
+- en hello.ts hacemos un console.log de req.cookies y ahi vamos a poder verlas
+
+7) Cambiar el tema basado en la cookie
+- en theme-changer.tsx usamos getServerSideProps y creamos un array con los temas permitidos
+- en el return creamos una validacion llamando a ese array
+- creamos una interface Props 
+- en la funcion principal, desestructuramos el theme y lo pasamos como estado inicial
+
+ ----------------------------
+
+ Para que funcione getServerSideProps, etc siempre tiene que ser una NextPage
+ (estar dentro de la carpeta pages)
+
+ -----------------------------
+
+ - en _app.tsx vamos a tener que usar getInitialProps aunque no es muy recomendable usarlo,
+   ya que perdermos el Automatic Static Optimization (le va a dar a toda la app server side
+   rendering, cuando nosotros no se lo pusimos) y hay cosas que deberian ser contenido
+   estatico
+   
+ - hacemos algo similar a lo de getServerSideProps en theme-changer.tsx
+
+ 8) Generar la pagina con el tema solicitado: 
+ - _app ya tiene un type, vamos a crear una interface Props que extiende el type
+ - desestructuramos el theme de las props
+ - creamos una constante con un ternario, que segun el valor del theme va a ser igual
+   a los themes creados
+  - pasamos esa constante como theme={}
+
+  9) Establecer el tema usando la cookie:
+  - comentamos el getInitialProps solo era a modo de ejemplo
+  - creamos un useState que como estado inicial va a tener el lightTheme
+  - creamos un useEffect que dentro va a tener:
+    > una constante que trae de las cookies el theme y si no hay nada va a ser light
+    > esta constante se la pasamos a otra constante que tiene un condicional que se va 
+      a encargar de seleccionarel theme
+    > el seter que recibe la constante anterior
+  - Esto cambiaria el theme usando las cookies 

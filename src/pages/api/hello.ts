@@ -9,5 +9,11 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  console.log(req.cookies);
+
+  // vamos a poder ver las cookies en el llamado con axios
+  res.status(200).json({
+    name: 'John Doe',
+    ...req.cookies
+  })
 }
